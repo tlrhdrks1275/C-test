@@ -1,0 +1,76 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+
+void print_board(int x, int y)
+{
+    char board[4][4];
+    int i, k;
+    
+    for(i=0; i<4; i++)
+    {
+        for(k=0; k<4; k++)
+        {
+            board[i][k]='O';
+        }
+    }
+    
+    //삼향 연산자를 이용! if문을 대신하여 글자 수를 줄일 수 있음
+    int row = (y>0) ? (2-y) : (1-y);
+    //y축: 2, 1, -1, -2  => row 인덱스: 0, 1, 2, 3
+    int col = (x>0) ? (1+x) : (2+x);
+    // x축: 2, 1, -1, -2  => col 인덱스: 3, 2, 1, 0
+    
+    board[row][col]='X';
+    
+    for(i=0; i<4; i++)
+    {
+        for(k=0; k<4; k++)
+        {
+            printf("%c", board[i][k]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
+void x_symmetric(int*x, int*y)
+{
+    *y=-(*y);
+}
+
+void y_symmetric(int *x, int *y)
+{
+    *x=-(*x);
+}
+
+void origin_symmetric(int *x, int *y)
+{
+    *x=-(*x);
+    *y=-(*y);
+}
+
+int main()
+{
+    int x, y;
+    
+    printf("좌표를 입력하세요(x y): ");
+    scanf("%d %d", &x, &y);
+    
+    printf("[원본 좌표평면]\n");
+    print_board(x, y);
+    
+    printf("[X축 대칭]\n");
+    x_symmetric(&x, &y);
+    print_board(x, y);
+    
+    printf("[y축 대칭]\n");
+    y_symmetric(&x, &y);
+    print_board(x, y);
+    
+    printf("[원점 대칭]\n");
+    origin_symmetric(&x, &y);
+    print_board(x, y);
+    
+    
+    return 0;
+}
