@@ -1,0 +1,42 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <malloc.h>
+
+
+int main()
+{
+    int *p;
+    int i, hap=0;
+    int cnt;
+    
+    printf("입력할 개수는?: ");
+    scanf("%d", &cnt);
+    
+    p=(int*)malloc(sizeof(int)*cnt);
+    
+    for(i=0; i<cnt; i++)
+    {
+        printf("%d 번째 숫자: ", i+1);
+        scanf("%d", &p[i]);
+    }
+    
+    for(i=0; i<cnt; i++)
+    {
+        if(p[i]%2==0)
+            hap=hap+p[i];
+    }
+    
+    printf("입력한 짝수 합==> %d\n", hap);
+    
+    free(p);
+    
+    return 0;
+}
+
+//<malloc.h>보다는 <stdlib.h> 헤더 파일 사용하는 것을 권함. 공식 표준 헤더로 메모리 할당 함수도 똑같이 포함 되어있고, 난수 생성, 문자열 변환 등 통합 유틸리티를 모두 포함되어 있음
+//malloc 사용 후 메모리가 정상 할당되었는지(if (p == NULL)) 확인하는 방어적 코딩 습관을 들이면 좋습니다. (밑에는 예시)
+/*  
+p = (int*)malloc(sizeof(int) * cnt);
+if (p == NULL) { // 메모리 할당 실패 검사
+  printf("메모리 할당 실패\n");
+*/
