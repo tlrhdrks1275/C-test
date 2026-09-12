@@ -40,3 +40,14 @@ p = (int*)malloc(sizeof(int) * cnt);
 if (p == NULL) { // 메모리 할당 실패 검사
   printf("메모리 할당 실패\n");
 */
+
+/*
+while (1) {
+        printf("입력할 개수는?: ");
+        if (scanf("%d", &cnt) == 1) { 
+            break;
+        }
+        printf("잘못된 입력입니다. 정수를 입력해 주세요.\n");
+        while (getchar() != '\n'); 
+    }
+이런 식으로도 표현 가능함 */
