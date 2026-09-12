@@ -1,0 +1,57 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    int *p;
+    int i, hap=0, cnt=0;
+    
+    
+    p = (int*)malloc(sizeof(int) * 1);
+    
+    if (p == NULL) { // 메모리 할당 실패 검증
+        printf("메모리 할당 실패!\n");
+        return 1;
+    }
+    
+    for(i=0; ; i++)
+    {
+        p=(int*)realloc(p, sizeof(int)*(i+1));
+        printf("%d 번째 숫자: ", i+1);
+        scanf("%d", &p[i]);
+        cnt++;
+        
+        if(p[i]==0)
+            break;
+    }
+    
+    for(i=0; i<cnt; i++)
+    {
+        if(p[i]%2==0)
+            hap=hap+p[i];
+    }
+    
+    printf("입력한 짝수 합==> %d\n", hap);
+    
+    free(p);
+    
+    return 0;
+}
+
+
+중간에 오류(메모리 부족)가 발생했을 때 기존 데이터를 잃어버리지 않고 안전하게 정리하기 위해서 임시 포인터를 사용하는 방식 -> 실무에서는 이렇게 추천
+/*
+int *tmp = NULL;
+    int i = 0, hap = 0;
+
+    while (1) {
+        // 임시 포인터를 활용한 안전한 realloc
+        tmp = (int*)realloc(p, sizeof(int) * (i + 1));
+        if (tmp == NULL) {
+            printf("메모리 할당 실패!\n");
+            free(p); // 기존 메모리 해제
+            return 1;
+        }
+        p = tmp;
+*/
