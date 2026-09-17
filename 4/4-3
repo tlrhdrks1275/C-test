@@ -1,0 +1,46 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main()
+{
+    int i, j, size;
+    char *p[3];
+    char isml[100];
+    
+    
+    
+    for(i=0; i<3; i++)
+    {
+        printf("%d 번째 문자열: ", i+1);
+        gets(isml);
+        size=strlen(isml);
+        p[i]=(char*)malloc((sizeof(char)*size)+1);
+        strcpy(p[i], isml);
+    }
+    
+    printf("\n\n-- 입력과 반대로 출력(포인터): 글자 순서도 거꾸로 --");
+    for(i=2; i>=0; i--)
+    {
+        size=strlen(p[i]);
+        printf("\n%d: ", i+1);
+        for(j=size-1; j>=0; j--)
+        {
+            printf("%c", p[i][j]);
+        }
+    }
+    
+    for (i = 0; i < 3; i++) {
+        free(p[i]);
+    }
+    
+    return 0;
+}
+
+/*
+scanf는 공백이나 탭, 줄바꿈을 구분자로 인식을 함. 따라서 이것들이 있으면 문장을 제대로 입력 받을수 없음
+따라서 fget을 이용해서 문장을 전체를 받는 식으로 함. 엔터(\n)를 getchar() 등으로 미리 비워주는 작업이 필요할 수도 있음
+
+추후에 한 번 scanf_s랑 fgets, scanf("%[^\n]s", isml)이런 식의 서식 지정자 정리 하기!!!
+*/
