@@ -1,0 +1,99 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdio.h>
+
+#include <stdlib.h>
+
+#include <string.h>
+
+
+
+
+
+int main()
+
+{
+
+    char *p[2];
+
+    char arr[100];
+
+    int i, size;
+
+    
+
+    printf("문자열을 입력하세요: ");
+
+    gets(arr);
+
+    size=strlen(arr);
+
+    p[0]=(char*)malloc((sizeof(char)*size)+1);
+
+    p[0][0]='\0';
+
+    p[1]=(char*)malloc((sizeof(char)*size)+1);
+
+    p[1][size]='\0';
+
+    strcpy(p[0], arr);
+
+    
+
+    
+
+    for(i=0; i<size; i++)
+
+    {
+
+        if(p[0][i]<91 && p[0][i]>64)
+
+        {
+
+            p[1][i]=p[0][i]+32;
+
+        }
+
+        
+
+        else if(p[0][i]<123 && p[0][i]>96)
+
+        {
+
+            p[1][i]=p[0][i]-32;
+
+        }
+
+        
+
+        else
+
+        {
+
+            p[1][i]=p[0][i];
+
+        }
+
+    }
+
+    
+
+    printf("\n----대소문자 변환----");
+
+    printf("\n%s", p[1]);
+
+    
+
+    for(i=0; i<2; i++)
+
+    {
+
+        free(p[i]);
+
+    }
+
+    
+
+    return 0;
+
+}
