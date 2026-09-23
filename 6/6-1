@@ -1,0 +1,48 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main()
+{
+    char arr [100];
+    FILE *wfp;
+    char *p[3];
+    int i, k, n;
+    
+    for(i=0; i<3; i++){
+        printf("%d번째 문자열: ", i+1);
+        gets(arr); // 또는 gets_s(arr, sizeof(arr));
+        n=strlen(arr);
+        p[i]=(char*)malloc((sizeof(char)*n)+1);
+        strcpy(p[i], arr);
+    }
+
+    wfp=fopen("output1.txt", "a");
+    if (wfp == NULL) {
+    printf("파일 열기 실패!\n");
+    return 1;
+}
+    
+    printf("--입력과 반대로 출력(포인터): 글자 순서도 거꾸로--");
+    fputs("--입력과 반대로 출력(포인터): 글자 순서도 거꾸로--", wfp);
+    fprintf(wfp, "\n");
+    for(i=3; i>0; i--)
+    {
+        printf("\n%d: ", i);
+        fprintf(wfp, "\n%d:", i);
+        for(k=strlen(p[i-1]); k>0; k--){
+            printf("%c", p[i-1][k-1]);
+            fprintf(wfp, "%c", p[i-1][k-1]);
+        }
+    }
+    
+    fclose(wfp);
+    for(i=0; i<3; i++)
+    {
+        free(p[i]);
+    }
+    
+    return 0;
+    
+}
