@@ -1,0 +1,59 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main()
+{
+    char arr [100];
+    FILE *rfp;
+    FILE *wfp;
+    int i, k, j, n;
+    char **p;
+    p=(char**)malloc(sizeof(char*));
+
+    rfp=fopen("in.txt", "r");
+    if (rfp == NULL) {
+    printf("파일 열기 실패!\n");
+    return 1;
+}
+    wfp=fopen("out.txt", "w");
+    if (wfp == NULL) {
+    printf("파일 열기 실패!\n");
+    return 1;
+}
+    j=0;
+    for( ; ; )
+    {
+        fgets(arr, 100, rfp);
+        if(feof(rfp))
+            break;
+        printf("%s", arr);
+        n=strlen(arr);
+        p=(char**)realloc(p, sizeof(char*)*(j+1));
+        p[j]=(char*)malloc((sizeof(char)*n)+1);
+        strcpy(p[j], arr);
+        j++;
+    }
+    
+    
+    for(i=0; i<j; i++)
+    {
+        for(k=strlen(p[i]); k>0; k--){
+            printf("%c", p[i][k-1]);
+            fprintf(wfp, "%c", p[i][k-1]);
+        }
+    }
+    
+    fclose(wfp);
+    fclose(rfp);
+    
+    for(i=0; i<j; i++)
+    {
+        free(p[i]);
+    }
+    free(p);
+    
+    return 0;
+    
+}
