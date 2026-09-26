@@ -21,7 +21,7 @@ int main()
     
     for( ; ; ){
         fgets(arr, 100, rfp);
-        if(fgets(arr, 100, rfp)==NULL)
+        if(feof(rfp))
             break;
         size=strlen(arr);
         p1[i]=(char*)malloc((sizeof(char)*size)+1);
@@ -37,9 +37,9 @@ int main()
             a=0;
             for(k=0; k<n; k++){
                 arr[a]=p1[j][k];
-                if(p1[j][k]==','){
-                    p2[check]=(char*)malloc((sizeof(char)*(k-num-1))+1;
-                    arr[a+1]='\0';
+                if(p1[j][k] == ',' || p1[j][k] == '\n' || p1[j][k] == '\0'){
+                    p2[check]=(char*)malloc((sizeof(char)*(a)+1));
+                    arr[a]='\0';
                     strcpy(p2[check], arr);
                     a=-1;
                     check++;
@@ -50,7 +50,6 @@ int main()
             break;
         }
     }
-    
     
     
     return 0;
