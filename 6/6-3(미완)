@@ -3,6 +3,64 @@
 #include <stdlib.h>
 #include <string.h>
 
+void write_result_to_file(char **p, int n, int check)
+{
+    int i;
+    
+    if(n==1){
+        FILE *wfp;
+        wfp=fopen("Result_Ascending.txt", "w");
+        fprintf(wfp, "=======sorting Result=======\n");
+        for(i=0; i<check; i++){
+            fprintf(wfp, "[%20s]\n", p[i]);
+        }
+        fclose(wfp);
+    }
+    
+    if(n==2){
+        FILE *wfp;
+        wfp=fopen("Result_Descending.txt", "w");
+        fprintf(wfp, "=======sorting Result=======\n");
+        for(i=0; i<check; i++){
+            fprintf(wfp, "[%20s]\n", p[i]);
+        }
+        fclose(wfp);
+    }
+}
+
+void sort_Ascending(char **p, int check)
+{
+    int i, j, n;
+    char *temp;
+    for(i=0; i<check-1; i++){
+        for(j=0; j<check-1; j++){
+            n=strcmp(p[j], p[j+1]);
+            if(n>0){
+                temp=p[j+1];
+                p[j+1]=p[j];
+                p[j]=temp;
+            }
+        }
+    }
+}
+
+void sort_Descending(char **p, int check)
+{
+    int i, j, n;
+    char *temp;
+    for(i=0; i<check-1; i++){
+        for(j=0; j<check-1; j++){
+            n=strcmp(p[j], p[j+1]);
+            if(n<0){
+                temp=p[j+1];
+                p[j+1]=p[j];
+                p[j]=temp;
+            }
+        }
+    }
+}
+
+
 int main()
 {
     char *p1[5];
@@ -11,7 +69,7 @@ int main()
     FILE *rfp;
     int size, i, j, k, n, a, num, check;
 
-    rfp=fopen("in.txt", "r");
+    rfp=fopen("data.txt", "r");
     if (rfp == NULL) {
     printf("파일 열기 실패!\n");
     return 1;
@@ -38,8 +96,12 @@ int main()
             for(k=0; k<n; k++){
                 arr[a]=p1[j][k];
                 if(p1[j][k] == ',' || p1[j][k] == '\n' || p1[j][k] == '\0'){
-                    p2[check]=(char*)malloc((sizeof(char)*(a)+1));
                     arr[a]='\0';
+                    if(strlen(arr)==0){
+                        a=-1;
+                        continue;
+                    }
+                    p2[check]=(char*)malloc((sizeof(char)*(a)+1));
                     strcpy(p2[check], arr);
                     a=-1;
                     check++;
@@ -51,6 +113,23 @@ int main()
         }
     }
     
+    sort_Ascending(p2, check);
+    write_result_to_file(p2, 1, check);
+    sort_Descending(p2, check);
+    write_result_to_file(p2, 2, check);
+    
+    // 1. p1 배열에 동적 할당된 메모리 해제 (총 i개)
+for (j = 0; j < i; j++) {
+    free(p1[j]);
+}
+
+// 2. p2 배열에 동적 할당된 메모리 해제 (총 check개)
+for (j = 0; j < check; j++) {
+    free(p2[j]);
+}
+
+// 3. 파일 포인터 닫기 (main 마지막 부분에 잊지 말고 추가!)
+fclose(rfp);
     
     return 0;
     
