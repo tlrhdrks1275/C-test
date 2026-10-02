@@ -11,7 +11,12 @@ int main()
     
     printf("출력하고 싶은 단을 입력: ");
     scanf("%d", &dan);
-    arr[0]=(char)dan+'0';
+    if(dan<1 || dan>9){
+        printf("1~9단을 입력해주세요");
+        return 1;
+    }
+    
+    sprintf(arr, "%d_dan.txt", dan);
     
     wfp=fopen(arr, "w");
     if (wfp == NULL) {
