@@ -1,0 +1,76 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+
+// 성적 문자열(A+, A0 등)을 숫자 점수(4.5, 4.0 등)로 변환하는 함수
+float get_score(const char *grade) {
+    float score = 0.0;
+
+    switch (grade[0]) {
+        case 'A': score = 4.0; break;
+        case 'B': score = 3.0; break;
+        case 'C': score = 2.0; break;
+        case 'D': score = 1.0; break;
+        default:  return 0.0; // F 및 기타 예외
+    }
+
+    // 두 번째 문자가 '+'인 경우 0.5점 추가 ('==' 연산자로 정확히 비교)
+    if (grade[1] == '+') {
+        score += 0.5;
+    }
+
+    return score;
+}
+
+int main() {
+    FILE *rfp = fopen("grade.txt", "r");
+    if (rfp == NULL) {
+        printf("grade.txt 파일 열기 실패!\n");
+        return 1;
+    }
+
+    char subject[50]; // 과목명
+    int credit;       // 학점
+    char grade[5];    // 성적 (A+, B0 등)
+
+    int total_credit = 0;   // 총 학점
+    float total_score = 0.0; // 총 점수 (학점 x 성적의 합)
+
+    // 파일의 첫 번째 줄(헤더: 과목명, 학점, 성적) 건너뛰기
+    char header[100];
+    if (fgets(header, sizeof(header), rfp) == NULL) {
+        printf("파일이 비어있습니다.\n");
+        fclose(rfp);
+        return 1;
+    }
+
+    printf("=== 과목별 성적 내역 ===\n");
+
+    // fscanf의 반환값이 3(3개 항목 정상 입력)인 동안 계속 읽기
+    // %s, %d 사이에 스페이스 1개만 써도 연속된 탭(\t)을 알아서 건너뜁니다.
+    while (fscanf(rfp, "%s %d %s", subject, &credit, grade) == 3) {
+        float grade_score = get_score(grade);  // 성적을 평점으로 변환
+        float subject_score = credit * grade_score; // 과목 점수 = 학점 x 성적
+
+        // 누적 계산
+        total_credit += credit;
+        total_score += subject_score;
+
+        // 과목별 정보 출력
+        printf("%s: %.2f점 (%d학점 x %.1f)\n", subject, subject_score, credit, grade_score);
+    }
+
+    fclose(rfp);
+
+    // 총 평점 계산 및 출력
+    if (total_credit > 0) {
+        float gpa = total_score / total_credit;
+        printf("------------------------\n");
+        printf("총 학점: %d학점\n", total_credit);
+        printf("총 평점: %.2f / 4.5\n", gpa);
+    } else {
+        printf("계산할 데이터가 없습니다.\n");
+    }
+
+    return 0;
+}
