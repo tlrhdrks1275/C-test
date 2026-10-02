@@ -1,0 +1,84 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+int main()
+{
+    int i, size, num=0, n;
+    float grade_num=0, score=0, all=0, s;
+    FILE *rfp;
+    char arr[100];
+    char grade[5];
+    
+    rfp=fopen("grade.txt", "r");
+    if (rfp == NULL) {
+        printf("파일 열기 실패");
+        return 1;
+    }
+    
+    fgets(arr, 100, rfp); //제목 제거
+    
+    for( ; ;){
+        fgets(arr, 100, rfp);
+        if(feof(rfp))
+            break;
+        size=strlen(arr);
+        for(i=0; i<size; i++){
+            if(arr[i]=='\t' && arr[i+1]>48 && arr[i+1]<57){
+                num=num+(int)arr[i+1]-'0';
+                grade[0]=arr[i+3];
+                grade[1]=arr[i+4];
+                arr[i]='\0';
+                break;
+            }
+            
+        }
+        
+        if(grade[0]=='A'){
+            grade_num+=4;
+            s=4;
+            if(grade[1]=='+'){
+                grade_num+=0.5;
+                s=4.5;
+            }
+        }
+        
+        if(grade[0]=='B'){
+            grade_num+=3;
+            s=3;
+            if(grade[1]=='+'){
+                grade_num+=0.5;
+                s=3.5;
+            }
+        }
+        
+        if(grade[0]=='C'){
+            grade_num+=2;
+            s=2;
+            if(grade[1]=='+'){
+                grade_num+=0.5;
+                s=2.5;
+            }
+        }
+        
+        if(grade[0]=='D'){
+            grade_num+=1;
+            s=1;
+            if(grade[1]=='+'){
+                grade_num+=0.5;
+                s=1.5;
+            }
+        }
+        
+        score=((float)arr[i+1]-'0')*s;
+        all=all+score;
+        printf("%s: %.2f점 (%.2f X %.2f)\n", arr, score, (float)arr[i+1]-'0', s);
+    }
+    
+    printf("총 평점: %.2f", all/num);
+
+    
+    
+    return 0;
+}
