@@ -1,0 +1,68 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+int main()
+{
+    
+    char arr[100];
+    char *menu_name[9];
+    int menu_price[9];
+    int i, size, num, sum=0;
+    FILE *rfp;
+    FILE *wfp;
+    
+    rfp=fopen("menu.txt", "r");
+    if(rfp==NULL){
+        printf("파일 열기 실패");
+        return 1;
+    }
+    //메뉴 읽기
+    i=0;
+    for( ; ; ){
+        if(fscanf(rfp, " %[^:]:%d", arr, &menu_price[i]) !=2 ){
+            break;
+            //^:를 이용하여 :전까지만 받게 하고, 2개를 제대로 입력받지 못하면 break를 걸리게 함
+            //그리고 그냥 menu_price[i] 하면 실제 값을 의미하니 &를 붙여야 함
+        }
+        size=strlen(arr);
+        menu_name[i]=(char*)malloc((sizeof(char)*size)+1);
+        strcpy(menu_name[i], arr);
+        i++;
+    }
+    
+    for(i=0; i<9; i++){
+        printf("\n[%d]%15s :%15d", i+1, menu_name[i], menu_price[i]);
+        
+    }
+    
+    wfp=fopen("receipt.txt", "w");
+    while(1){
+        printf("\n메뉴를 고르세요, 주문 완료는 0을 누르세요: ");
+        scanf("%d", &num);
+        if(num==0){
+            printf("\n주문을 종료합니다.");
+            fprintf(wfp, "결제금액 : %d", sum);
+            break;
+        }
+        if(num<1 || num>9){
+            printf("\n메뉴 번호를 다시 입력해주세요.");
+            continue;
+        }
+        
+        printf("\n%s 주문받았습니다.", menu_name[num-1]);
+        fprintf(wfp, "%s : %d\n", menu_name[num-1], menu_price[num-1]);
+        sum+=menu_price[num-1];
+        
+    }
+    
+    fclose(wfp);
+    fclose(rfp);
+    
+    for(i=0; i<9; i++){
+        free(menu_name[i]);
+    }
+
+    return 0;
+}
