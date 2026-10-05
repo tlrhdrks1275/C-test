@@ -1,0 +1,61 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    struct students {
+        char name[15];
+        int kor_score;
+        int eng_score;
+        float avg_score;
+    };
+    
+    float sum_kor=0;
+    float sum_eng=0;
+    float sum_sum=0;
+    
+    int num;
+    int i;
+    
+    printf("입력할 학생의 수: ");
+    scanf("%d", &num);
+    
+    struct students *a=(struct students*)malloc(sizeof(struct students)*num);
+    
+    for(i=0; i<num; i++){
+        printf("\n학생 이름: ");
+        scanf(" %s", a[i].name);
+        printf("국어 점수: ");
+        scanf("%d", &a[i].kor_score);
+        printf("영어 점수: ");
+        scanf("%d", &a[i].eng_score);
+        
+        a[i].avg_score=((float)a[i].kor_score+(float)a[i].eng_score)/2;
+        sum_kor+=(float)a[i].kor_score;
+        sum_eng+=(float)a[i].eng_score;
+        sum_sum+=a[i].avg_score;
+    }
+    
+    
+    FILE *wfp;
+    wfp=fopen("average_student.txt", "w");
+    if(wfp==NULL){
+        printf("파일 열기 실패");
+        free(a);
+        return 1;
+    }
+    
+    for(i=0; i<num; i++){
+        fprintf(wfp, "이름: %s, 영어: %d, 국어: %d, 평균점수: %.2f\n", a[i].name, a[i].eng_score, a[i].kor_score, a[i].avg_score);
+    }
+    
+    fprintf(wfp, "영어 평균 점수: %.2f, 국어 평균 점수: %.2f\n", sum_eng/num, sum_kor/num);
+    fprintf(wfp, "모든 학생들의 평균 점수: %.2f", sum_sum/num);
+    
+    free(a);
+    fclose(wfp);
+    
+    printf("\naverage_student.txt 파일을 저장했습니다");
+    return 0;
+}
