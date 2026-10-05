@@ -14,11 +14,15 @@ int main()
     printf("입력할 학생 수: ");
     scanf("%d", &n);
     
-    struct students s[n];
+    struct students *s=(struct students*)malloc(sizeof(struct students)*n);
+    if(s==NULL){
+        printf("메모리 할당 실패");
+        return 1;
+    }
     
     for(i=0; i<n; i++){
         printf("이름과 나이를 입력: ");
-        scanf(" %s %d", &s[i].name, &s[i].age);
+        scanf(" %s %d", s[i].name, &s[i].age);
     }
     
     printf("\n--학생 명단--\n");
