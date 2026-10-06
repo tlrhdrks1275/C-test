@@ -1,0 +1,64 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+    enum months{
+    January=1, February, March, April, May, June, July, August, September, October, November, December    
+    };
+    
+    enum months m;
+    int month;
+    
+    printf("월 입력: ");
+    scanf("%d", &month);
+    
+    
+    switch(month){
+        case January:
+            printf("%d월은 January 입니다.", month);
+            break;
+        case February:
+            printf("%d월은 February 입니다.", month);
+            break;
+        case March:
+            printf("%d월은 March 입니다.", month);
+            break;
+        case April:
+            printf("%d월은 April 입니다.", month);
+            break;
+        case May:
+            printf("%d월은 May 입니다.", month);
+            break;
+        case June:
+            printf("%d월은 June 입니다.", month);
+            break;
+        case July:
+            printf("%d월은 July 입니다.", month);
+            break;
+        case August:
+            printf("%d월은 August 입니다.", month);
+            break;
+        case September:
+            printf("%d월은 September 입니다.", month);
+            break;
+        case October:
+            printf("%d월은 October 입니다.", month);
+            break;
+        case November:
+            printf("%d월은 November 입니다.", month);
+            break;
+        case December:
+            printf("%d월은 December 입니다.", month);
+            break;
+        default:
+            printf("숫자를 다시 입력해 주세요.");
+            break;
+    }
+    
+    return 0;
+}
+
+
+//enum으로 선언한 문자열은 함수 내에서 숫자처럼 사용이 가능하다
