@@ -1,0 +1,57 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct booklist{
+        char name[40];
+        int num;
+    };
+
+
+
+void initial_booklist(struct booklist *p)
+{
+    FILE *rfp;
+    char *token;
+    char arr[100];
+    int count=0;
+    rfp=fopen("book.txt", "r");
+    if(rfp==NULL){
+        printf("book.txt읽기 실패");
+        return ;
+    }
+    
+    fgets(arr, sizeof(arr), rfp);
+    while(fgets(arr, sizeof(arr), rfp)!=NULL)
+    {
+        token=strtok(arr, "\t");
+        strcpy(p[count].name, token);
+        token=strtok(NULL, "\t\n");
+        p[count].num=atoi(token);
+        count ++;
+    }
+    
+    fclose(rfp);
+}
+
+int main()
+{
+    
+    struct booklist *p=(struct booklist*)malloc(sizeof(struct booklist)*21);
+    //일단은 책이 총 21권이니까 이렇게 할께
+    initial_booklist(p);
+    int i, select;
+    printf("현재 책 보유 현황입니다.\n");
+    for(i=0; i<21; i++){
+        printf("ID: %2d || 책 이름 : %35s || 책 수량: %5d\n", i+1, p[i].name, p[i].num);
+    }
+    
+    while(1){
+        printf("빌려 갈 도서의 ID를 입력해 주세요: ");
+        scanf("%d", &select);
+    }
+    
+    free(p);
+    return 0;
+}
