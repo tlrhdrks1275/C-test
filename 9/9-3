@@ -9,6 +9,23 @@ struct booklist{
     };
 
 
+void manage_booklist(struct booklist *p)
+{
+    FILE *wfp;
+    wfp=fopen("book.txt", "w");
+    if(wfp==NULL){
+        printf("book.txt쓰기 실패");
+        return ;
+    }
+    
+    fprintf(wfp, "Book_name\t\tCount");
+    for(int i=0; i<21; i++){
+        fprintf(wfp, "\n%s\t\t%d", p[i].name, p[i].num);
+    }
+    
+    fclose(wfp);
+}
+
 
 void initial_booklist(struct booklist *p)
 {
@@ -48,8 +65,30 @@ int main()
     }
     
     while(1){
-        printf("빌려 갈 도서의 ID를 입력해 주세요: ");
+        printf("\n빌려 갈 도서의 ID를 입력해 주세요(0을 입력하면 종료): ");
         scanf("%d", &select);
+        
+        if(select==0){
+            printf("도서관 서비스를 종료합니다.");
+            manage_booklist(p);
+            break;
+        }
+        
+        
+        if(select<0 || select>21){
+            printf("유효한 도서 ID를 입력해주세요.");
+            continue;
+        }
+        
+        if(p[select-1].num<=0){
+            printf("해당 도서가 모두 대여되어 현재 이용이 불가능합니다.");
+            continue;
+        }
+        
+        
+        
+        printf("%s 을(를) 1권 대여하였습니다.", p[select-1].name);
+        p[select-1].num=p[select-1].num-1;
     }
     
     free(p);
