@@ -1,0 +1,170 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct booklist{
+        char name[40];
+        int num;
+    };
+
+void print_booklist(struct booklist *p)
+{
+    int i;
+    printf("현재 책 보유 현황입니다.\n");
+    for(i=0; i<21; i++){
+        printf("ID: %2d || 책 이름 : %35s || 책 수량: %5d\n", i+1, p[i].name, p[i].num);
+    }
+    
+}
+
+
+int admin_check(struct booklist *p)
+{
+    FILE *rfp;
+    rfp=fopen("admin_auth.txt", "r");
+    if(rfp==NULL){
+        printf("admin_auth 읽기 실패");
+        return 0;
+    }
+    
+    char id [100];
+    int password;
+    char id_in[10];
+    char trash[5];
+    int password_in;
+    fscanf(rfp, "%s %s", trash, id_in);
+    fscanf(rfp, "%s %d", trash, &password_in);
+    
+    printf("\nID: ");
+    scanf(" %s", &id);
+    printf("\nPW: ");
+    scanf(" %d", &password);
+    
+    
+    if(strcmp(id_in, id)==0 && password==password_in){
+        printf("로그인 성공\n");
+        print_booklist(p);
+        
+        printf("서비스 모드로 전환하려면 1을 종료하려면 0을 입력해주세요: ");
+        scanf("%d", &password);
+        
+        return password;
+    }
+    
+    printf("로그인 실패");
+    return 0;
+    
+}
+
+
+void manage_booklist(struct booklist *p)
+{
+    FILE *wfp;
+    wfp=fopen("book.txt", "w");
+    if(wfp==NULL){
+        printf("book.txt쓰기 실패");
+        return ;
+    }
+    
+    fprintf(wfp, "Book_name\t\tCount");
+    for(int i=0; i<21; i++){
+        fprintf(wfp, "\n%s\t\t%d", p[i].name, p[i].num);
+    }
+    
+    fclose(wfp);
+}
+
+
+void initial_booklist(struct booklist *p)
+{
+    FILE *rfp;
+    char *token;
+    char arr[100];
+    int count=0;
+    rfp=fopen("book.txt", "r");
+    if(rfp==NULL){
+        printf("book.txt읽기 실패");
+        return ;
+    }
+    
+    fgets(arr, sizeof(arr), rfp);
+    while(fgets(arr, sizeof(arr), rfp)!=NULL)
+    {
+        token=strtok(arr, "\t");
+        strcpy(p[count].name, token);
+        token=strtok(NULL, "\t\n");
+        p[count].num=atoi(token);
+        count ++;
+    }
+    
+    fclose(rfp);
+}
+
+int main(int argc, char *argv[])
+{
+    struct booklist *p=(struct booklist*)malloc(sizeof(struct booklist)*21);
+    //일단은 책이 총 21권이니까 이렇게 할께
+    initial_booklist(p);
+    int i, select;
+    
+    if(argc>1){
+    if(strcmp(argv[1],"admin")==0){
+        i=admin_check(p);   
+            if(i==0){
+                printf("프로그램을 종료합니다.");
+                return 0;
+            }
+        }
+    }
+    
+    printf("현재 책 보유 현황입니다.\n");
+    for(i=0; i<21; i++){
+        printf("ID: %2d || 책 이름 : %35s || 책 수량: %5d\n", i+1, p[i].name, p[i].num);
+    }
+    
+    
+    while(1){
+        printf("\n빌려 갈 도서의 ID를 입력해 주세요(0을 입력하면 종료): ");
+        scanf("%d", &select);
+        
+        
+        
+        
+        if(select==0){
+            printf("도서관 서비스를 종료합니다.");
+            manage_booklist(p);
+            break;
+        }
+        
+        
+        //테스트용 루트
+        if(select==99){
+            i=admin_check(p);   
+            if(i==0){
+                printf("프로그램을 종료합니다.");
+                return 0;
+            }
+            continue;
+        }
+        
+        
+        if(select<0 || select>21){
+            printf("유효한 도서 ID를 입력해주세요.");
+            continue;
+        }
+        
+        if(p[select-1].num<=0){
+            printf("해당 도서가 모두 대여되어 현재 이용이 불가능합니다.");
+            continue;
+        }
+        
+        
+        
+        printf("%s 을(를) 1권 대여하였습니다.", p[select-1].name);
+        p[select-1].num=p[select-1].num-1;
+    }
+    
+    free(p);
+    return 0;
+}
