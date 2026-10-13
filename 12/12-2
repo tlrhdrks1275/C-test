@@ -1,0 +1,103 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+struct node
+{
+    int num;
+    struct node *next;
+};
+
+struct node *create_node(int data){
+    struct node *new_node=malloc(sizeof(struct node));
+    new_node->num=data;
+    new_node->next=NULL;
+    
+    return new_node;
+    
+}
+
+struct node *insert_node(struct node *head, int data)
+{
+    struct node *new_node=create_node(data);
+    if(head==NULL){
+        head=new_node;
+    }
+    
+    else{
+        struct node *temp=head;
+        while(temp->next !=NULL){
+            temp=temp->next;
+        }
+        temp->next=new_node;
+    }
+    return head;
+}
+
+struct node *delete_node(struct node *head, int target)
+{
+    struct node* current=head;
+    struct node* prev=NULL;
+    
+    //목표가 첫 노드
+    if(current != NULL && current->num==target){
+        head=current->next;
+        free(current);
+        return head;
+    }
+    
+    //노드 찾기
+    while(current !=NULL && current->num != target){
+        prev=current;
+        current=current->next;
+    }
+    
+    //노드를 못 찾을 때
+    if(current==NULL){
+        printf("\n삭제할 노드가 없습니다.\n");
+        return head;
+    }
+    
+    //노드가 마지막일 때
+    if(current->next==NULL){
+        prev->next=NULL;
+        free(current);
+        return head;
+    }
+    //노드가 중간일 때
+    prev->next=current->next;
+    free(current);
+    return head;
+}
+
+int main()
+{
+    int i, num;
+    struct node *head=NULL;
+    
+    for( ; ; ){
+        printf("숫자를 입력해주세요(0은 종료): ");
+        scanf("%d", &num);
+        
+        if(num==0){
+            struct node *temp=head;
+            printf("입력한 값들: ");
+            while(temp!=NULL){
+                printf("%d ", temp->num);
+                temp=temp->next;
+            }
+            return 0;
+        }
+        
+        if(num<0){
+            head=delete_node(head, -num);
+        }
+        
+        if(num>0){
+            head=insert_node(head, num);
+        }
+    }
+
+    return 0;
+}
