@@ -1,0 +1,96 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct node{
+    int num;
+    char name[25];
+    struct node *next;
+};
+
+struct drinks{
+    int price;
+    char name[25];
+};
+
+struct node *create_node(struct drinks* p, int i){
+    struct node *new_node=malloc(sizeof(struct node));
+    new_node->num=p[i].price;
+    strcpy(new_node->name,p[i].name);
+    new_node->next=NULL;
+    
+    return new_node;
+    
+}
+
+struct node *insert_node(struct node *head, struct drinks* p, int i)
+{
+    struct node *new_node=create_node(p, i);
+    if(head==NULL){
+        head=new_node;
+    }
+    
+    else{
+        struct node *temp=head;
+        while(temp->next !=NULL){
+            temp=temp->next;
+        }
+        temp->next=new_node;
+    }
+    return head;
+}
+
+
+
+
+void ascending_order(struct drinks* p)
+{
+    int i, j;
+    struct drinks temp;
+    
+    for(i=0; i<4; i++){
+        for(j=0; j<4-i; j++){
+            if(strcmp(p[j].name, p[j+1].name)>0){
+                temp=p[j];
+                p[j]=p[j+1];
+                p[j+1]=temp;
+            }
+        }
+    }
+}
+
+int main()
+{
+    FILE *rfp;
+    rfp=fopen("drink.txt", "r");
+    if(rfp==NULL){
+        printf("파일 열기 실패");
+        return 1;
+    }
+    
+    //메뉴 개수가 5개니 그냥 5개로 크기 확정 함
+    struct drinks *drinks=malloc(sizeof(struct drinks)*5);
+    
+    for(int i=0; i<5; i++){
+        fscanf(rfp, "%s %d", drinks[i].name, &drinks[i].price);
+    }
+    
+    struct node *head=NULL;
+    //struct node *head_name=NULL;
+    
+    
+    ascending_order(drinks);
+    for(int i=0; i<5; i++){
+        head=insert_node(head, drinks, i);
+    }
+    
+    struct node *temp=head;
+    printf("이름순으로 정렬");
+    while(temp!=NULL){
+    printf("\n%-20s: %d", temp->name, temp->num);
+    temp=temp->next;
+    }
+    
+    return 0;
+}
